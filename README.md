@@ -93,7 +93,11 @@ SELECT * FROM `bicycle-436922.bicycle_trip.may2023`
 
 
 2. View the table
+   
 SELECT *
 FROM bicycle-436922.bicycle_trip.Combined_tripdata
 LIMIT 10;
+
+<img width="935" alt="Screen Shot 2024-09-28 at 7 19 03 PM" src="https://github.com/user-attachments/assets/b2401fe1-2654-44e0-a09d-be1eb80ee73b">
+
 
