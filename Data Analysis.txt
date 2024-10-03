@@ -1,0 +1,282 @@
+﻿Step 4: Data Analysis
+Now that the data is cleaned and ready for analysis. I am going to focus on exploring information related to types of bikes, number of trips and average ride length. After processing and cleaning the data, I queried the data to answer the following questions:
+1. Find the Ride Types?
+2. What’s the ride length in minutes ?
+3. How many cyclists per month per rider category?
+4. How many cyclists per week per rider category?
+5. How many rides per hour?
+6. What is the average ride length , min and max per cyclist category?
+7. How many cyclists per day per rider category?
+8. What is the average ride length per day per cyclist category?
+9. What’s the popular day among the riders?
+10. What’s the popular start station among the riders?
+
+
+
+
+1. Find the popular ride types?
+This analysis was done to figure out which is the popular bike among riders. There are three types of bikes: Electric, Classic, Docked. The query below shows that electric bikes seem to be more popular than the other two bikes.
+
+
+
+
+SELECT DISTINCT (rideable_type) AS no_rideable_type, COUNT(*) AS no_of_rows
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+GROUP BY no_rideable_type
+  
+
+
+
+
+
+
+
+--Ride Types by Casual and Members riders.
+
+
+Next, I tried to analyze the popular bike used among casual and member riders. Interestingly, Both the riders favored electric bikes for their rides.It looks like the member riders opted out to use docked bikes at any point.
+  
+
+
+
+
+
+2. What’s the ride length in minutes ?
+I Calculated through the TIMESTAMP_DIFF function. This function subtracts timestamps and returns the unit of time indicated. In this case, I used MINUTE.
+
+
+TIMESTAMP_DIFF(ended_at, started_at, MINUTE) AS ride_length_in_mins
+
+
+I then calculated day of the week and month by using EXTRACT to extract month from started_at and EXTRACT day of the week from started_at. I have added 3 extra column ride length in mins, day of week and month. Along with that I removed the rides with shorter duration of less than a min or longer than 24 hrs.
+
+
+CREATE TABLE `bicycle-436922.bicycle_trip.Cleaned1_tripdata` AS (
+SELECT
+ride_id,
+rideable_type,
+started_at,
+ended_at,
+ride_length_in_mins,
+CASE
+EXTRACT(MONTH FROM started_at)
+  WHEN 1 THEN 'January'
+  WHEN 2 THEN 'February'
+  WHEN 3 THEN 'March'
+  WHEN 4 THEN 'April'
+  WHEN 5 THEN 'May'    
+  WHEN 6 THEN 'June'
+  WHEN 7 THEN 'July'
+  WHEN 8 THEN 'August'
+  WHEN 9 THEN 'September'
+  WHEN 10 THEN 'October'    
+  WHEN 11 THEN 'November'
+  WHEN 12 THEN 'December'
+END AS month,
+CASE EXTRACT(DAYOFWEEK FROM started_at)
+  WHEN 1 THEN 'Sunday'
+  WHEN 2 THEN 'Monday'
+  WHEN 3 THEN 'Tuesday'
+  WHEN 4 THEN 'Wednesday'
+  WHEN 5 THEN 'Thursday'
+  WHEN 6 THEN 'Friday'
+  WHEN 7 THEN 'Saturday'  
+END AS day_of_week,
+start_station_name,
+start_station_id,
+end_station_name,
+end_station_id,
+start_lat,
+start_lng,
+end_lat,
+end_lng,
+member_casual,
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` AS t1
+JOIN
+(SELECT ride_id,
+ TIMESTAMP_DIFF(ended_at, started_at, MINUTE) AS ride_length_in_mins
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`) AS t2
+USING(ride_id)
+WHERE ride_length_in_mins > 1 AND ride_length_in_mins < 1440);
+
+
+  
+
+This statement created a new table named Cleaned1_tripdata.
+
+
+
+
+3. How many rides per month does each rider takes?
+
+
+SELECT member_casual, month, 
+COUNT(*) AS total_rides_per_month
+FROM `bicycle-436922.bicycle_trip.Cleaned1_tripdata`
+GROUP BY member_casual, month
+ORDER BY member_casual;
+
+
+  
+
+
+
+
+
+  
+
+4.How many rides per week does each rider take?
+ 
+SELECT member_casual, day_of_week,COUNT(*) AS total_rides_per_week
+FROM `bicycle-436922.bicycle_trip.Cleaned1_tripdata`
+GROUP BY member_casual,day_of_week
+ORDER BY member_casual;
+
+
+
+
+
+
+  
+
+
+
+
+
+SELECT member_casual, day_of_week,COUNT(*) AS total_rides_per_week
+FROM `bicycle-436922.bicycle_trip.Cleaned1_tripdata`
+GROUP BY member_casual,day_of_week
+ORDER BY member_casual;
+
+
+5.How many rides per hour does each rider take?
+
+
+SELECT member_casual,
+EXTRACT(HOUR FROM started_at) AS hour_of_day,
+COUNT(*) AS total_trips
+FROM `bicycle-436922.bicycle_trip.Cleaned1_tripdata`
+GROUP BY member_casual,hour_of_day
+ORDER BY member_casual;
+
+
+6.What's the average,min and max ride length among the riders?
+
+
+Analysis of Average Ride length, min and max ride length member vs casual riders.
+
+
+
+
+  
+
+
+
+The above query shows that casual riders average ride length takes around 20 min more than member riders.
+
+
+--max trip time for both members
+  
+
+
+
+
+
+
+
+
+
+As you can see that the max of ride length in mins for causal and member riders is 1439.0 mins
+
+
+---- minimum amount of time spent on a bike
+  
+
+
+
+7.What is the most popular day for casual riders?
+---- Analysis on the most popular and least popular day for casual riders.
+  
+
+
+
+8.What is the most popular day for member riders?
+
+
+The query below helps to understand the most popular and least popular day for member riders. Thursday seems to be popular and Sunday seems to be least popular among member riders.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9.What is the most popular start station name for casual riders?
+ 
+
+
+  
+
+
+
+
+
+It seems from the above result that the frequently visited start station by casual riders are Streeter Dr & Grand ave.
+
+
+10.What is the most popular start station name for member riders?
+
+
+ 
+  
+
+
+
+The above result clearly shows that the most frequently used and popular start station by members is Kingsbury St & Kinzie St.
+
+
+11.How many average rides per month by both the riders?
+
+
+  
+
+  
+
+
+
+From the analysis it clearly shows that both the riders have reached their highest avg riding activity  in July. Both of them experienced their lowest activity in January.
+
+
+
+
+12. How many rides per day does each rider take ?
+
+
+  
+
+
+
+  
+
+
+
+From the above result it can be seen that most rides by members and casual occurred during the weekends. If we investigate further by following the query. It clearly shows that members have taken higher trips than casual riders. Which shows that members use the service more on weekdays and casual riders on weekends.
