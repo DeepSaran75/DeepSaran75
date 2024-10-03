@@ -1,0 +1,140 @@
+﻿Data Observation
+
+
+* Verifying the size of rows
+
+
+SELECT COUNT(*) AS total_rows
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`;
+
+
+
+
+  
+
+
+
+
+
+Step 3: Process
+
+
+* I decided to analyze the quantity of null values by checking for the number of null values in all columns.
+
+
+
+
+SELECT 'null_count_ride_id' AS column_name, COUNT(*) AS count_value 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE ride_id IS NULL
+UNION ALL
+SELECT 'null_count_rideable_type', COUNT(*)
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE rideable_type IS NULL
+UNION ALL
+SELECT 'null_count_started_at', COUNT(*)
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE started_at IS NULL
+UNION ALL
+SELECT 'null_count_ended_at', COUNT(*)
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE ended_at IS NULL
+UNION ALL
+SELECT 'null_count_start_station_name', COUNT(*)
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE start_station_name IS NULL
+UNION ALL
+SELECT 'null_count_start_station_id', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE start_station_id IS NULL
+UNION ALL
+SELECT 'null_count_end_station_name', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE end_station_name IS NULL
+UNION ALL
+SELECT 'null_count_end_station_id', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE end_station_id IS NULL
+UNION ALL
+SELECT 'null_count_start_lat', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE start_lat IS NULL
+UNION ALL
+SELECT 'null_count_start_lng', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE start_lng IS NULL
+UNION ALL
+SELECT 'null_count_end_lat', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE end_lat IS NULL
+UNION ALL
+SELECT 'null_count_end_lng', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE end_lng IS NULL
+UNION ALL
+SELECT 'null_count_member_casual', COUNT(*) 
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata` 
+WHERE member_casual IS NULL;
+
+
+  
+
+
+
+
+
+
+
+* Checking for duplicates
+
+
+
+
+SELECT COUNT(*) AS total_duplicate_rows
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+GROUP BY
+ride_id,
+rideable_type,
+started_at,
+ended_at,
+start_station_name,
+start_station_id,
+end_station_name,
+end_station_id,
+start_lat,
+start_lng,
+end_lat,
+end_lng,
+member_casual
+HAVING COUNT(*) > 1;
+
+
+No duplicate rows
+
+
+
+
+* Find the length of the ride id to make sure they are consistent.
+
+
+SELECT LENGTH (ride_id) AS length_ride_id, COUNT(*) AS no_of_rows
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+GROUP BY length_ride_id
+
+
+  
+
+
+
+Obviously, there are problems with the data if there are negative ride lengths and rides lasting for days. I wrote these queries to see how many rides were negative or lasted longer than one day.
+
+
+
+
+
+
+SELECT ride_id, started_at, ended_at,
+TIMESTAMP_DIFF(ended_at,started_at,MINUTE) AS negative_ride_length_in_minutes, COUNT(ride_id) AS no_of_rows
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+WHERE TIMESTAMP_DIFF(ended_at,started_at,MINUTE) <=1
+GROUP BY ride_id,started_at, ended_at;
