@@ -1,0 +1,61 @@
+**DATA COLLECTION**
+
+I will be using Cyclistic’s historical trip data from January 2023 to December 2023 to analyze and identify trends. 
+(Note: The datasets have a different name because Cyclistic is a fictional company. For the purposes of this case study,
+the datasets are appropriate and will enable me to answer the business questions. The data has been made available by Motivate International Inc. under this license)
+This is public data that I can use to explore how different customer types are using Cyclistic bikes.
+But note that data-privacy issues prohibit me from using riders’ personally identifiable information.
+This means that I won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area 
+or if they have purchased multiple single passes. The dataset can be found here.
+
+The ride details with 13 variables is shown below:
+
+
+**COMBINING ALL ROWS**
+
+
+In order to clean and explore the data further, I had to choose SQL on google’s BigQuery platform.
+The csv files were too large to be imported to Excel spreadsheet since they exceeded the capacity.
+I downloaded the csv files from Jan till Dec 2023 (Note: Sep dataset was missing ) and imported them to SQL.
+I then combined all the tables to Combined1_tripdata. Using the following query.
+While uploading I was notified that local uploads are limited to only 100 mb. I had to use Google Cloud storage to import.
+I created a bucket through Google Cloud storage to upload all the files to sql.
+
+
+
+
+**Combined Tables: **
+
+
+CREATE TABLE IF NOT EXISTS `bicycle-436922.bicycle_trip.Combined1_tripdata` AS (
+SELECT * FROM `bicycle-436922.bicycle_trip.jan2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.feb2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.mar2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.apr2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.may2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.jun2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.july2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.aug2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.oct2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.nov2023`
+UNION ALL
+SELECT * FROM `bicycle-436922.bicycle_trip.dec2023`
+
+
+)
+
+
+**View the table**
+SELECT *
+FROM `bicycle-436922.bicycle_trip.Combined1_tripdata`
+LIMIT 10;
+
