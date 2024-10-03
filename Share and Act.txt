@@ -1,0 +1,21 @@
+﻿Share 
+Now that I have done some research and gained some insights from the data. I need to create visualizations and share it with the shareholders. I used Tableau for creating some insightful visualizations.
+Here’s my dashboard with relevant visualizations at a glimpse.
+https://public.tableau.com/app/profile/deepa.saravanan6315/viz/GoogleDataAnalyticsDashboard-BikeRideAnalysis/GoogleDataAnalyticsDashboard-BikeRideAnalysis
+
+
+
+
+
+
+Act:
+Now that I have finished completing my visualizations. The final phase includes providing recommendations based on my findings.
+
+
+1. Seasonal Membership option: Introduce discounted seasonal membership offers to attract more riders during the summer to capture a significant number of riders. Also, Consider providing annual membership discounts to casual cyclists.
+
+
+2. Consider promoting membership events near stations to promote more visibility and pass on flyers which emphasize the positive impact of fitness which can help reduce stress and improve overall well being.
+
+
+3. Showcase the benefits of bikeshare especially electric bikes and their impact on a sustainable environment. This can be done through social media platforms like Facebook, Twitter and Instagram.
